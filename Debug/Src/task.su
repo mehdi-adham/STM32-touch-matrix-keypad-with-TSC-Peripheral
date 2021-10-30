@@ -1,0 +1,3 @@
+task.c:20:6:HAL_UART_TxCpltCallback	16	static
+task.c:29:6:HAL_UART_RxCpltCallback	16	static
+task.c:37:6:HAL_TIM_PeriodElapsedCallback	16	static

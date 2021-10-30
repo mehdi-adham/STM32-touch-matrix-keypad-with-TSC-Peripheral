@@ -1,0 +1,2 @@
+stmCriticalSection.c:73:6:enterLock	8	static
+stmCriticalSection.c:79:6:exitLock	8	static

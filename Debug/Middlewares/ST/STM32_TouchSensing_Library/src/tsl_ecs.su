@@ -1,0 +1,3 @@
+tsl_ecs.c:55:15:TSL_ecs_CalcK	40	static
+tsl_ecs.c:173:6:TSL_ecs_ProcessK	48	static
+tsl_ecs.c:273:19:TSL_ecs_Process	32	static

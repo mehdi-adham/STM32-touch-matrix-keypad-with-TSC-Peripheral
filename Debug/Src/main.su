@@ -1,0 +1,7 @@
+main.c:80:5:main	16	static
+main.c:146:6:SystemClock_Config	104	static
+main.c:192:13:MX_TIM15_Init	32	static
+main.c:238:13:MX_TSC_Init	8	static
+main.c:281:13:MX_USART1_UART_Init	8	static
+main.c:316:13:MX_GPIO_Init	24	static
+main.c:334:6:Error_Handler	8	static
