@@ -2,7 +2,7 @@
   ******************************************************************************
   * @file    task.h
   * @created 11/02/1398 9:01:22 AM
-  * @author  HSA R&D Team - Mehdi Adham
+  * @author  Mehdi Adham
   * @brief   This file contains all the functions Event
   ******************************************************************************
   */
