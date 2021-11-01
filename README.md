@@ -34,3 +34,110 @@ In the connectivity settings section, go to the USART1 section and set the Baud 
 
 Now save the project and finally click Code Generation to generate the config code.
 
+## Introduction to TSL Library
+I will explain about the project code and the TSL library. The TSL library detects Touch and we can use it in our application.
+**How to use TSL library functions in your application.**
+One of the most important libraries is tsl_user, which contains the user configuration file for TOUCHSENSING MiddleWare. This library is available in the src folder.
+An important function of this library is tsl_user_Exec (void), which is used to run the STMTouch driver, and if it reports a touch, its return value will be TSL_STATUS_OK.
+
+So it is enough to use this function in the program whether the return value of this function is equal to TSL_STATUS_OK or not.
+```
+if(tsl_user_Exec() == TSL_STATUS_OK){
+
+}
+```
+**Which channel or PIN has been touched?**
+The tsl_user library has another important variable called MyTKeys[] of type TSL_TouchKey_T, which is an array of touch pin lists (we used seven pins in this project) from which touch detection information can be extracted.
+
+**TSL_TouchKey_T** is a structure of the touch key sensor variables.
+```
+/** Contains definition of a TouchKey sensor.
+  * Variables of this structure type can be placed in RAM or ROM.
+  */
+typedef struct
+{
+  TSL_TouchKeyData_T          *p_Data;    /**< Data (state id, counter, flags, ...) */
+  TSL_TouchKeyParam_T         *p_Param;   /**< Parameters (thresholds, debounce, ...) */
+  TSL_ChannelData_T           *p_ChD;     /**< Channel Data (Meas, Ref, Delta, ...) */
+  CONST TSL_State_T           *p_SM;      /**< State Machine */
+  CONST TSL_TouchKeyMethods_T *p_Methods; /**< Methods */
+}
+TSL_TouchKey_T;
+```
+We need the value p_Data*, which is of type TSL_TouchKeyData_T. Which contains all the data related to the touch key sensor.
+Variables of this type of structure should only be in RAM.
+```
+/** Contains all data related to TouchKey sensor.
+  * Variables of this structure type must be placed in RAM only.
+  */
+typedef struct
+{
+  TSL_StateId_enum_T StateId;         /**< Current state identifier */
+  TSL_tCounter_T     CounterDebounce; /**< Counter for debounce and calibration management */
+  unsigned int       CounterDTO : 6;  /**< Counter for DTO management (TSL_tCounter_T) */
+  unsigned int       Change     : 1;  /**< The State is different from the previous one (TSL_StateChange_enum_T) */
+  unsigned int       DxSLock    : 1;  /**< The State is locked by the DxS (TSL_Bool_enum_T) */
+}
+TSL_TouchKeyData_T;
+```
+The value of StartId indicates the current state of the touch pin, and if it is equal to detect_type, it means that it has detected the touch pin, so it is enough to compare the value of StartId seven pins with detect_type, if it is equal, it means the same pin is touched.
+```
+if(tsl_user_Exec() == TSL_STATUS_OK){
+  if(MyTKeys[1].p_Data->StateId == detect_type)
+    //...
+  else if(MyTKeys[2].p_Data->StateId == detect_type)
+    //...
+  else if(MyTKeys[3].p_Data->StateId == detect_type)
+   //...
+}
+```
+Because in this project we want to make a 3x4 touch matrix key, we have designed it to use a maximum of seven pins (not 12 pins) of the microcontroller, which means that each touch will cause the user to touch two pins together.
+
+![Touchkey matrix sensor](https://user-images.githubusercontent.com/39982694/139678854-59d9df0d-8581-4da8-ad18-71902b07dfaa.jpg)
+
+So we need to check two pins, (matrix key number) as in the following code example:
+```
+if(tsl_user_Exec() == TSL_STATUS_OK){
+  if(MyTKeys[1].p_Data->StateId == detect_type && MyTKeys[4].p_Data->StateId == detect_type)
+  //...
+}
+```
+I created a library for this project called **touchkey.c**, which is for managing the touch matrix keyboard.
+This library has a function called **touchkey_scan(void)** that you just need to use in your application. Whenever a key is touched, it puts the number of that key in the GET_KEY variable.
+
+**Note:** that you must first include the **touchkey.h** library in your application and extern the **GET_KEY** variable.
+```
+/* USER CODE BEGIN Includes */
+#include "touchkey.h"
+.
+.
+/* USER CODE BEGIN PV */
+extern char GET_KEY ;
+```
+Finally the program code will be as follows:
+```
+/* USER CODE BEGIN WHILE */
+
+	HAL_Delay(500);
+	uint8_t key;
+	while (1)
+	{
+		touchkey_scan();
+		key =  GET_KEY;
+
+		if(key != ' '){
+			HAL_UART_Transmit(&huart1, &key, 1, 100);
+			key = '\n';
+			HAL_UART_Transmit(&huart1, &key, 1, 100);
+                        GET_KEY = ' ';
+		}
+
+		// HAL_Delay(1);
+		/* USER CODE END WHILE */
+
+		/* USER CODE BEGIN 3 */
+
+	}
+	/* USER CODE END 3 */
+```
+**Important Note:** The tsl_user_Exec (void) function is in the timer interrupt and runs during the timer period. Therefore, we do not need to use this function in the program, and if it detects a touch, the variable touch_status changes.
