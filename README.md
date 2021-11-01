@@ -1,4 +1,4 @@
-# Build STM32 "Touch Matrix Keyboard" with TSC Peripheral
+# Build STM32 "Touchkey Matrix 3x4" with TSC Peripheral
 TSC technology in STM32 microcontrollers with TSL library enables the designer to easily add touch sensor capability to any application.
 
 ## Configure the pins for control by the TSC library
