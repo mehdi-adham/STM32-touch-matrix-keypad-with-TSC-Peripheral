@@ -6,3 +6,4 @@ In this project, we have used the STM32F051C8 microcontroller, which has six TSC
 
 Open the STM32CubeIDE software and create a new project with the STM32F051C8 microcontroller. In the Pinout field, enter the pins as shown below. Note that we have enabled the USART1 unit. We will use it to send and display the touched number in the computer monitor serial.
 
+![pinout](https://user-images.githubusercontent.com/39982694/139670395-a7f2861b-53cb-4b64-b6b7-6492499cecbf.png)
