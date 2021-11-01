@@ -127,6 +127,7 @@ int main(void)
 			HAL_UART_Transmit(&huart1, &key, 1, 100);
 			key = '\n';
 			HAL_UART_Transmit(&huart1, &key, 1, 100);
+			GET_KEY = ' ';
 		}
 
 		// HAL_Delay(1);
