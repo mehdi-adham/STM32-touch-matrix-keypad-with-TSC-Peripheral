@@ -44,7 +44,7 @@ void touchkey_scan(void){
 	/*********************************touchkey_scan();**************************/
 
 	/*	touch_status = tsl_user_Exec();
-	if(TSL_USER_STATUS_BUSY == touch_status){
+	if(TSL_USER_STATUS_BUSY == touch_status){TSL_STATUS_OK
 		// Nothing to do
 		if(cnt++%50==0){
 		}
